@@ -1,5 +1,5 @@
-#include <DHT_U.h>
-#include <DHT.h>
+
+#include <dht.h>
 
 
 
@@ -7,7 +7,7 @@
 
 // DHT Sensor
 uint8_t DHTPin = D4; 
-const int ledPin = 16; //D0
+const int heaterPin = 16; //D0
                
 // Initialize DHT sensor.
 DHT dht(DHTPin, DHTTYPE);                
@@ -20,7 +20,7 @@ void setup() {
   delay(100);
   pinMode(DHTPin, INPUT);
   dht.begin();  
-  analogWrite(ledPin, 512);            
+//  analogWrite(heaterPin, 512);            
  }
 
  
@@ -29,4 +29,14 @@ void loop() {
   Humidity = dht.readHumidity(); // Gets the values of the humidity 
   Serial.println(Temperature); 
   delay(3000);
+}
+
+int calibration(){ 
+// heats incubator in steps of 5% of pwm and checks when tempreature stops increasing. stores data on SPIFFS in calibration.txt file
+// outputs serial data: "temperature pwm" for plotting
+  
+}
+
+void init(){
+  
 }
