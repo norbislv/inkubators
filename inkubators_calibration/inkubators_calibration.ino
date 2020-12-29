@@ -12,7 +12,21 @@ int cycleStartTime=0; //time when cycle was started
 int PWM=0; //output pwm value 
                
 // Initialize DHT sensor.
-DHT dht(DHTPin, DHTTYPE);                
+DHT dht(DHTPin, DHTTYPE);  
+
+// function prototypes to make compiler happy
+void readSensors();
+bool checkSPIFF();
+bool checkSetup();
+bool checkCalibration();
+int checkWatchDog();
+bool formatSPIFF();
+bool doSetup();
+bool calibration();
+bool updateWatchDog (int elpased);
+void startHeatCycle(int temperature, int timeToGo);
+int checkTemperature (int targetTemperature, int previousTemperature);
+
  
 void setup() {
   Serial.begin(115200);
@@ -31,15 +45,38 @@ void loop() {
     doSetup();
   }
   if (!checkCalibration()){
-   Serial.println("Calibration should be done. This will take long time. proceed? [Y/n]") 
-  }
+   Serial.println("Calibration should be done. This will take long time. proceed? [Y/n]");
+    int incomingByte= 0;
+    if (Serial.available() > 0) {
+    incomingByte = Serial.read();
+    if (char(incomingByte)=="Y" || char(incomingByte)=="y") {
+      while (!calibration){
+    }
+    }
+    else {
+      Serial.println("ok, will just read sensors for now");
+      readSensors();
+      
+    }
+   }}
   while (1){// main cycle
    delay(3000);
    checkTemperature(30,30);
   }
 }
 
-
+void readSensors(){
+//just prints output from sensor
+ float temperature;
+ float humidity;
+ while(1){
+ temperature = dht.readTemperature(); // Gets the values of the temperature
+ humidity = dht.readHumidity(); // Gets the values of the humidity 
+ Serial.print (temperature); 
+ Serial.print (", ");
+ Serial.print (humidity);
+ }
+}
 bool checkSPIFF(){
 //checks if version.txt is present.
   
@@ -48,7 +85,7 @@ bool checkSPIFF(){
 bool checkSetup(){
   //checks if setup.txt is present.
 }
-bool checkCalibrtion(){
+bool checkCalibration(){
 //checks if calibration.txt if present
 }
 
@@ -91,4 +128,5 @@ int checkTemperature (int targetTemperature, int previousTemperature){
  humidity = dht.readHumidity(); // Gets the values of the humidity 
  Serial.println(temperature); 
  //  analogWrite(heaterPin, 512);  // heater 
+ return temperature;
 }
