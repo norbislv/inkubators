@@ -137,8 +137,7 @@ bool calibration(){
      Serial.println("file open failed");
      return false;
    }
-   
-  
+     
    int oldTemp = dht.readTemperature(); //we start from current temperature, not 0
    analogWrite(heaterPin, PWM);  // start the heater 
    
